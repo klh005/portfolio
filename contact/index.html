@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="../style.css">
+<nav>
+    <ul>
+        <li><a href="../index.html">Main</a></li>
+        <li><a href="../projects/index.html">Projects</a>
+        <li><a href="../contact/index.html" class="current">Contact</a></li>
+        <li><a href="../resume/index.html">Resume</a></li>
+        <li><a href="https://github.com/klh005" target="_blank">My profile</a></li>
+    </ul>
+</nav>
 <head>
-    <link rel="stylesheet" href="../style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
     <h1>contact page</h1>
-    <nav>
-        <a href="../index.html">Main</a>
-        <a href="../projects/index.html">Projects</a>
-        <a href="../contact/index.html">Contact</a>
-        <a href="../resume/index.html">Resume</a>
-        <a href="https://github.com/klh005" target="_blank">My profile</a>
-    </nav>
     <form action="mailto:klh005@ucsd.edu" method="POST" enctype="text/plain">
-        <label>Email:<input name="email" type="email"></label>
-        <label>Subject:<input name="subject"></label>
-        <label>Body:<textarea name="body"></textarea></label>
-        <button>Submit</button>
+        <label class="contact">Email:<input name="email" type="email" 
+            class="contactctrl"></label>
+        <label class="contact">Subject:<input name="subject" class="contactctrl">
+        </label>
+        <label class="contact">Body:<textarea name="body" 
+            class="contactctrl"></textarea></label>
+        <button class="contact">Submit</button>
     </form>
 </head>
 <body>

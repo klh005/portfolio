@@ -1,10 +1,109 @@
+html {
+  --color-accent: oklch(65% 50% 0);
+  accent-color: var(--color-accent)
+}
+
+head {
+  font: 100%/1.5 system-ui;
+  max-width: 100ch;
+  margin-inline: auto;
+}
+
 body {
     /* Set line height to 1.5 times the font size
          and use the OS’s UI font as the website font
        */
     font: 100%/1.5 system-ui;
-    max-width: 100ch
+    max-width: 100ch;
+    margin-inline: auto;
   }
-div {
-    padding: 25px 50px 75px 100px;
+
+ul {
+    display: contents;
+    list-style-type: none;
+  }
+
+a {
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    padding: 0.5em;
 }
+
+a:hover {
+  background-color: oklch(from var(--color-accent) 95% 5% h);
+  border-bottom: 0.4em;
+  border-bottom-style: solid;
+  border-bottom-color: var(--color-accent);
+  padding-bottom: 0em;
+}
+
+a.current {
+  font-weight: bold;
+  border-bottom: 0.4em;
+  border-bottom-style: solid;
+  border-bottom-color: oklch(80% 3% 200);
+  padding-bottom: 0em;
+}
+
+nav {
+  display: flex;
+  margin-bottom: 1em;
+  padding-bottom: 0.2em;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: oklch(80% 3% 200);
+}
+
+form {
+  font-family: inherit;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1em;
+  margin-block: 0.5em 0.5em;
+}
+
+form label {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+form textarea,
+form input {
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form button {
+  font-family: inherit;
+  grid-column: 1 / -1;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+}
+
+.projects article {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h2 {
+  margin: 0;
+  size: 400%;
+}
+
+/* .contactctrl {
+  grid-column: 2;
+} */
