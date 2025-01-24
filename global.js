@@ -35,19 +35,22 @@ document.body.prepend(nav);
 for (let p of pages) {
   let url = p.url;
   let title = p.title;
-  if (url.includes('github')) {
-    url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : 'portfolio/' + url;
+
+  // Handle GitHub Pages base directory
+  if (!url.startsWith('http')) {
+    url = ARE_WE_HOME ? url : `../${url}`;
   }
-  else {
-    url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : url;
-  }
+
   let a = document.createElement('a');
   a.href = url;
   a.textContent = title;
+
   if (url.startsWith('http')) {
     a.target = "_blank";
   }
+
   nav.append(a);
+
   if (a.host === location.host && a.pathname === location.pathname) {
     a.classList.add('current');
   }
@@ -108,7 +111,6 @@ form?.addEventListener('submit', (event) => {
     }
   }
 
-  // Remove the trailing '&' or '?' if no parameters were added
   url = url.slice(0, -1);
 
   location.href = url;
