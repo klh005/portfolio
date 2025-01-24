@@ -1,6 +1,7 @@
 html {
   --color-accent: oklch(65% 50% 0);
-  accent-color: var(--color-accent)
+  accent-color: var(--color-accent);
+  color-scheme: light dark;
 }
 
 head {
@@ -10,50 +11,42 @@ head {
 }
 
 body {
-    /* Set line height to 1.5 times the font size
-         and use the OS’s UI font as the website font
-       */
-    font: 100%/1.5 system-ui;
-    max-width: 100ch;
-    margin-inline: auto;
-  }
+  font: 100%/1.5 system-ui;
+  max-width: 100ch;
+  margin-inline: auto;
+}
 
 ul {
-    display: contents;
-    list-style-type: none;
-  }
+  display: contents;
+  list-style-type: none;
+}
 
 a {
-    flex: 1;
-    text-decoration: none;
-    color: inherit;
-    text-align: center;
-    padding: 0.5em;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  padding: 0.5em;
+}
+
+nav {
+  --border-color: oklch(50% 10% 200 / 40%);
+  display: flex;
+  margin-bottom: 1em;
+  padding-bottom: 0em;
+  border-bottom: 1px solid var(--border-color);;
 }
 
 a:hover {
-  background-color: oklch(from var(--color-accent) 95% 5% h);
-  border-bottom: 0.4em;
-  border-bottom-style: solid;
-  border-bottom-color: var(--color-accent);
+  background-color: color-mix(in oklch, var(--color-accent), canvas 85%);;
+  border-bottom: 0.4em solid var(--color-accent);
   padding-bottom: 0em;
 }
 
 a.current {
   font-weight: bold;
-  border-bottom: 0.4em;
-  border-bottom-style: solid;
-  border-bottom-color: oklch(80% 3% 200);
+  border-bottom: 0.4em solid var(--border-color);
   padding-bottom: 0em;
-}
-
-nav {
-  display: flex;
-  margin-bottom: 1em;
-  padding-bottom: 0.2em;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: oklch(80% 3% 200);
 }
 
 form {
@@ -61,7 +54,7 @@ form {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1em;
-  margin-block: 0.5em 0.5em;
+  margin-block: 0.5em;
 }
 
 form label {
@@ -82,26 +75,30 @@ form button {
   grid-column: 1 / -1;
 }
 
-.project {
+.projects {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em;
 }
 
 .projects article {
   display: grid;
   grid-template-rows: subgrid;
   grid-row: span 3;
+  gap: 0.5em;
 }
 
-h1, h2, h3, h4, h5, h6
-{
+h1, h2, h3, h4, h5, h6 {
   line-height: 1.1;
   text-wrap: balance;
 }
 
+h1 {
+  font-size: 400%;
+}
+
 h2 {
   margin: 0;
-  size: 400%;
 }
 
 /* .contactctrl {
@@ -164,7 +161,6 @@ h2 {
 
 .resume-section section article p,
 .resume-section section article ul {
-
   grid-column: 1 / -1;
 }
 
@@ -194,4 +190,32 @@ h2 {
   .resume-section section article time {
     text-align: left;
   }
+}
+
+/* dark mode */
+.color-scheme {
+  position: fixed; 
+  top: 1rem;
+  right: 1rem;
+  font-size: 80%;
+  font-family: inherit;
+  z-index: 1000; 
+  padding: 0.5em;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.color-scheme select {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+
+body {
+  position: relative;
+  padding-top: 3rem; /* Add padding to prevent content from being hidden under the switcher */
 }
