@@ -1,6 +1,4 @@
 console.log('IT’S ALIVE!');
-
-// helper funcs
 function tagging(tag, options) {
   return Object.assign(document.createElement(tag), options);
 }
@@ -19,7 +17,8 @@ let currentLink = navLinks.find(
 currentLink?.classList.add('current');
 
 // navigation menu
-const ARE_WE_HOME = document.documentElement.classList.contains('home');
+const IS_GITHUB_PAGES = window.location.hostname === 'klh005.github.io';
+const BASE_URL = IS_GITHUB_PAGES ? '/portfolio/' : '/';
 
 let pages = [
   { url: '', title: 'Home' },
@@ -36,12 +35,9 @@ for (let p of pages) {
   let url = p.url;
   let title = p.title;
 
-  // Handle GitHub Pages base directory
+  // Prepend base URL to internal links
   if (!url.startsWith('http')) {
-    // Only add "portfolio/" if the URL does not already start with it
-    if (!url.startsWith('portfolio/')) {
-      url = `portfolio/${url}`;
-    }
+    url = `${BASE_URL}${url}`;
   }
 
   let a = document.createElement('a');
@@ -115,6 +111,5 @@ form?.addEventListener('submit', (event) => {
   }
 
   url = url.slice(0, -1);
-
   location.href = url;
 });
