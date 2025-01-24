@@ -35,7 +35,7 @@ document.body.prepend(nav);
 for (let p of pages) {
   let url = p.url;
   let title = p.title;
-  url = !ARE_WE_HOME && !url.startsWith('http') ? '../portfolio/' + url : url;
+  url = !ARE_WE_HOME && !url.startsWith('http') ? '../portfolio/' + url : '/portfolio/' + url;
   let a = document.createElement('a');
   a.href = url;
   a.textContent = title;
