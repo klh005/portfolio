@@ -38,7 +38,7 @@ for (let p of pages) {
 
   // Handle GitHub Pages base directory
   if (!url.startsWith('http')) {
-    url = ARE_WE_HOME ? url : `../${url}`;
+    url = `portfolio/${url}`; // Always prefix with "portfolio/"
   }
 
   let a = document.createElement('a');
