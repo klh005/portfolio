@@ -36,7 +36,7 @@ for (let p of pages) {
   let url = p.url;
   let title = p.title;
   if (url.includes('github')) {
-    url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : '../' + url;
+    url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : '../portfolio/' + url;
   }
   else {
     url = !ARE_WE_HOME && !url.startsWith('http') ? '../' + url : url;
