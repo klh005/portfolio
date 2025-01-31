@@ -19,6 +19,7 @@ currentLink?.classList.add('current');
 
 // navigation menu
 
+
 let pages = [
   { url: '', title: 'Home' },
   { url: 'projects/', title: 'Projects' },
@@ -32,7 +33,7 @@ document.body.prepend(nav);
 
 for (let p of pages) {
   let url = p.url;
-  let is_github = url.includes('github');
+  let is_github = window.location.hostname === 'klh005.github.io';
   let title = p.title;
 
   let giturl = is_github ? '/portfolio/' : '/';
