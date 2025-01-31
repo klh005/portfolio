@@ -1,4 +1,5 @@
 console.log('IT’S ALIVE!');
+
 function tagging(tag, options) {
   return Object.assign(document.createElement(tag), options);
 }
@@ -17,8 +18,6 @@ let currentLink = navLinks.find(
 currentLink?.classList.add('current');
 
 // navigation menu
-const IS_GITHUB_PAGES = window.location.hostname === 'klh005.github.io';
-const BASE_URL = IS_GITHUB_PAGES ? '/portfolio/' : '/';
 
 let pages = [
   { url: '', title: 'Home' },
@@ -33,11 +32,13 @@ document.body.prepend(nav);
 
 for (let p of pages) {
   let url = p.url;
+  let is_github = url.includes('github');
   let title = p.title;
 
-  // Prepend base URL to internal links
+  let giturl = is_github ? '/portfolio/' : '/';
+
   if (!url.startsWith('http')) {
-    url = `${BASE_URL}${url}`;
+    url = `${giturl}${url}`;
   }
 
   let a = document.createElement('a');
@@ -113,3 +114,33 @@ form?.addEventListener('submit', (event) => {
   url = url.slice(0, -1);
   location.href = url;
 });
+
+// fetching json file
+export async function fetchJSON(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch failed:", error);
+  }
+}
+
+export function renderProjects(projects, container, headingLevel = 'h2') {
+  container.innerHTML = '';
+  projects.forEach(project => {
+    const article = document.createElement('article');
+    article.innerHTML = `
+      <${headingLevel}>${project.title}</${headingLevel}>
+      <img src="${project.image}" alt="${project.title}">
+      <p>${project.description}</p>
+      <small>Year: ${project.year}</small>
+    `;
+    container.appendChild(article);
+  });
+}
+
+export async function fetchGitHubData(username) {
+  const data = await fetchJSON(`https://api.github.com/users/${username}`);
+  return data;
+}
