@@ -219,3 +219,69 @@ body {
   position: relative;
   padding-top: 3rem; /* Add padding to prevent content from being hidden under the switcher */
 }
+
+/* Pie chart styling */
+#projects-pie-plot {
+  max-width: 20em;
+  margin: 2em;
+  overflow: visible;
+}
+
+path {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+path:hover {
+  opacity: 0.8;
+}
+
+.selected {
+  --color: oklch(60% 45% 0) !important;
+  filter: brightness(1.2);
+}
+
+/* legend styling */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  padding: 1em;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 2px;
+  background-color: var(--color);
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  align-items: center;
+  margin: 2em 0;
+}
+
+.project-info {
+  display: grid;
+  gap: 0.5em;
+}
+
+.project-info small {
+  font-family: Baskerville, serif;
+  font-variant-numeric: oldstyle-nums;
+  color: #666;
+}
