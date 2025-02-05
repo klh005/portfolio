@@ -38,7 +38,7 @@ function renderPieChart(filteredProjects) {
     .attr('class', (_, i) => selectedIndex === i ? 'selected' : '')
     .on('click', (_, i) => {
       selectedIndex = selectedIndex === i ? -1 : i;
-      updateDisplay(filteredProjects);
+      updateDisplay();
     });
 
   legend.selectAll('li')
@@ -52,21 +52,19 @@ function renderPieChart(filteredProjects) {
     `)
     .on('click', (_, i) => {
       selectedIndex = selectedIndex === i ? -1 : i;
-      updateDisplay(filteredProjects);
+      updateDisplay();
     });
 }
 
-function updateDisplay(projects) {
+function updateDisplay() {
   let filtered = projects.filter(p => {
     const values = Object.values(p).join(' ').toLowerCase();
-    return values.includes(query.toLowerCase());
+    const matchesSearch = values.includes(query.toLowerCase());
+    const yearMatch = selectedIndex === -1 || 
+      String(p.year) === data[selectedIndex]?.label;
+    
+    return matchesSearch && yearMatch;
   });
-
-  if (selectedIndex > -1) {
-    const selectedYear = data[selectedIndex]?.label;
-    filtered = filtered.filter(p => String(p.year) === selectedYear);
-  }
-
   renderProjects(filtered, projectsContainer);
   renderPieChart(filtered);
 }
@@ -76,5 +74,6 @@ renderProjects(projects, projectsContainer);
 
 document.querySelector('.searchBar').addEventListener('input', (e) => {
   query = e.target.value;
-  updateDisplay(projects);
+  selectedIndex = -1;
+  updateDisplay();
 });

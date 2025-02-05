@@ -105,91 +105,52 @@ h2 {
   grid-column: 2;
 } */
 
-/* Resume */
+/* Resume Styles */
 .resume-section {
-  background-color: inherit;
-  padding: 2em;
-  border-radius: 10px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
-.resume-section time {
-  margin-top: 1.5em;
-  margin-right: 0;
-  margin-left: auto;
-}
-
-.resume-section header {
+.resume-header {
   text-align: center;
-  margin-bottom: 1.5em;
+  margin-bottom: 2rem;
 }
 
-.resume-section header h1 {
-  font-size: 3em;
-  margin-bottom: 0.5em;
-}
-
-.resume-section header p {
-  font-size: 1.2em;
-  color: var(--color-accent);
-}
-
-.resume-section section {
-  margin-bottom: 2em;
-}
-
-.resume-section section h2 {
-  font-size: 2em;
-  margin-bottom: 0.75em;
-}
-
-.resume-section section article {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1em;
-  align-items: start;
-}
-
-.resume-section section article h3 {
-  font-size: 1.5em;
-  margin-bottom: 0.3em;
-}
-
-.resume-section section article time {
+.contact-info {
+  margin-top: 0.5rem;
   font-size: 0.9em;
-  color: gray;
 }
 
-.resume-section section article p,
-.resume-section section article ul {
-  grid-column: 1 / -1;
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
 }
 
-.resume-section section article ul {
-  list-style-type: disc;
-  margin-left: 1.5em;
+.subheading {
+  color: #666;
+  margin-bottom: 0.5rem;
 }
 
-.resume-section img {
-  display: block;
-  margin: 0 auto 1em auto;
-  width: 150px;
-  height: auto;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.resume-list {
+  padding-left: 1.5rem;
 }
 
-@media (max-width: 800px) {
-  .projects {
-    grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
-  }
+.resume-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
 
-  .resume-section section article {
-    grid-template-columns: 1fr;
-  }
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
 
-  .resume-section section article time {
-    text-align: left;
-  }
+.skill-category h4 {
+  margin-bottom: 0.5rem;
+  color: #333;
 }
 
 /* dark mode */
