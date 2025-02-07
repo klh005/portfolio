@@ -188,13 +188,13 @@ body {
   overflow: visible;
 }
 
-path {
-  cursor: pointer;
-  transition: opacity 0.3s;
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
 }
 
-path:hover {
-  opacity: 0.8;
+path {
+  transition: opacity 300ms;
+  cursor: pointer;
 }
 
 .selected {
