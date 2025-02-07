@@ -37,18 +37,21 @@ function renderPieChart() {
     .join('path')
     .attr('d', arcGenerator)
     .attr('fill', (_, i) => colorScale(i))
-    .attr('class', (_, i) => selectedIndex === i ? 'selected' : '')
+    .attr('stroke', 'transparent') // Initial transparent stroke
+    .classed('selected', (_, i) => selectedIndex === i)
     .on('click', (_, d) => {
       const clickedIndex = currentData.findIndex(item => item.year === d.data.year);
       selectedIndex = selectedIndex === clickedIndex ? -1 : clickedIndex;
       updateDisplay();
-    });
+      updateChartSelection();
+  });
 
+  // Legend
   legend.selectAll('li')
     .data(currentData)
     .join('li')
     .attr('style', (_, i) => `--color: ${colorScale(i)}`)
-    .attr('class', (_, i) => selectedIndex === i ? 'selected' : '')
+    .classed('selected', (_, i) => selectedIndex === i)
     .html(d => `
       <span class="swatch"></span>
       ${d.label} <em>(${d.value})</em>
@@ -76,6 +79,14 @@ function updateDisplay() {
   });
 
   renderProjects(filteredProjects, projectsContainer);
+}
+
+function updateChartSelection() {
+  svg.selectAll('path')
+    .classed('selected', (_, i) => i === selectedIndex);
+  
+  legend.selectAll('li')
+    .classed('selected', (_, i) => i === selectedIndex);
 }
 
 renderPieChart();

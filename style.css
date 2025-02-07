@@ -188,19 +188,25 @@ body {
   overflow: visible;
 }
 
+path.selected {
+  --color: oklch(60% 45% 0);
+  fill: var(--color) !important;
+  stroke-width: 3px;
+
+}
+
+/* Keep hover effect */
 #projects-pie-plot:has(path:hover) path:not(:hover) {
   opacity: 0.5;
 }
 
+/* Base path styles */
 path {
-  transition: opacity 300ms;
+  transition: opacity 300ms, stroke 200ms;
   cursor: pointer;
+  stroke-width: 0; /* Default no border */
 }
 
-.selected {
-  --color: oklch(60% 45% 0) !important;
-  filter: brightness(1.2);
-}
 
 /* legend styling */
 .legend {
