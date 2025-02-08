@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Analysis</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/meta/">Code Stats</a>
+    </nav>
+    
+    <main>
+        <h1>Codebase Statistics</h1>
+        <div id="stats"></div>
+        
+        <h2>Commits Over Time</h2>
+        <div id="chart"></div>
+        <p id="selection-count">No commits selected</p>
+        <dl id="language-breakdown" class="stats"></dl>
+    </main>
+
+    <dl id="commit-tooltip" class="info tooltip" hidden>
+        <dt>Commit</dt>
+        <dd><a href="" id="commit-link" target="_blank"></a></dd>
+        <dt>Date</dt>
+        <dd id="commit-date"></dd>
+        <dt>Time</dt>
+        <dd id="commit-time"></dd>
+        <dt>Author</dt>
+        <dd id="commit-author"></dd>
+        <dt>Lines</dt>
+        <dd id="commit-lines"></dd>
+    </dl>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
