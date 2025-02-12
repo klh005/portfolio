@@ -2,6 +2,7 @@ let data = [];
 let commits = [];
 let brushSelection = null;
 let xScale, yScale, rScale;
+let currentCommitFilter = 'all'; // Keep track of the selected commit filter
 
 const width = 1000;
 const height = 600;
@@ -23,12 +24,12 @@ async function loadData() {
         depth: +row.depth,
         length: +row.length,
         datetime: new Date(row.datetime),
-        type: row.type // Ensure 'type' is kept as is (string)
+        type: row.type
     }));
 
     processCommits();
-    displayStats();
-    createScatterplot();
+    populateCommitDropdown(); // Populate the dropdown
+    updateStatsAndChart();    // Initial update with all commits
     setupBrush();
 }
 
@@ -45,32 +46,66 @@ function processCommits() {
                 datetime,
                 hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
                 totalLines: lines.length,
-                date: first.date, // Keep date for summary stats if needed
-                time: first.time, // Keep time for summary stats if needed
-                timezone: first.timezone // Keep timezone for summary stats if needed
+                date: first.date,
+                time: first.time,
+                timezone: first.timezone
             };
 
             Object.defineProperty(commitObj, 'lines', {
                 value: lines,
-                enumerable: false // Hide from console.log by default
+                enumerable: false
             });
 
             return commitObj;
         });
 }
 
-function displayStats() {
+function populateCommitDropdown() {
+    const dropdown = d3.select('#commit-dropdown');
+
+    // Add options for each commit ID
+    commits.forEach(commit => {
+        dropdown.append('option')
+            .attr('value', commit.id)
+            .text(commit.id.slice(0, 7)); // Display shortened commit ID
+    });
+
+    // Event listener for dropdown change
+    dropdown.on('change', function() {
+        currentCommitFilter = this.value;
+        updateStatsAndChart(); // Update stats and chart based on selected commit
+    });
+}
+
+function updateStatsAndChart() {
+    const commitsToDisplay = filterCommits(); // Get commits based on filter
+
+    displayStats(commitsToDisplay);
+    createScatterplot(commitsToDisplay); // Pass filtered commits to scatterplot
+}
+
+function filterCommits() {
+    if (currentCommitFilter === 'all') {
+        return commits; // Show all commits
+    } else {
+        // Filter to only include the selected commit (or commits up to it, adjust as needed)
+        return commits.filter(commit => commit.id === currentCommitFilter);
+    }
+}
+
+
+function displayStats(commitsToUse) { // Accept commitsToUse as argument
     const stats = d3.select('#stats')
+        .selectAll('*').remove() // Clear previous stats
         .append('dl')
         .attr('class', 'stats');
 
-    stats.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>'); // Corrected to Total LOC
-    stats.append('dd').text(data.length);
+    stats.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
+    stats.append('dd').text(data.length); // Total LOC is still based on all data
 
-    stats.append('dt').text('Total Commits');
-    stats.append('dd').text(commits.length);
+    stats.append('dt').text('Commits Displayed'); // Updated label
+    stats.append('dd').text(commitsToUse.length); // Display count of filtered commits
 
-    // Example of more stats you can add (Step 1.3):
     const fileCount = d3.group(data, d => d.file).size;
     stats.append('dt').text('Number of Files');
     stats.append('dd').text(fileCount);
@@ -80,30 +115,37 @@ function displayStats() {
     stats.append('dd').text(maxFileLineCount);
 }
 
-function createScatterplot() {
+function createScatterplot(commitsToUse) { // Accept commitsToUse as argument
+    d3.select('#chart svg').remove(); // Clear previous chart
+
+    if (commitsToUse.length === 0) {
+        d3.select('#chart').append('p').text("No commits to display for this selection.");
+        return; // Exit if no commits to display
+    }
+
     const svg = d3.select('#chart')
         .append('svg')
         .attr('viewBox', `0 0 ${width} ${height}`);
 
     xScale = d3.scaleTime()
-        .domain(d3.extent(commits, d => d.datetime))
-        .range([usableArea.left, usableArea.right]) // Use usableArea
-        .nice(); // Add nice for cleaner axis
+        .domain(d3.extent(commitsToUse, d => d.datetime)) // Use filtered commits
+        .range([usableArea.left, usableArea.right])
+        .nice();
 
     yScale = d3.scaleLinear()
         .domain([0, 24])
-        .range([usableArea.bottom, usableArea.top]); // Use usableArea
+        .range([usableArea.bottom, usableArea.top]);
 
     rScale = d3.scaleSqrt()
-        .domain(d3.extent(commits, d => d.totalLines))
+        .domain(d3.extent(commitsToUse, d => d.totalLines)) // Use filtered commits
         .range([2, 15]);
 
-    // Gridlines (before axes)
+    // Gridlines
     svg.append('g')
         .attr('class', 'gridlines')
         .attr('transform', `translate(${usableArea.left},0)`)
         .call(d3.axisLeft(yScale)
-            .tickSize(-usableArea.width) // Use usableArea width
+            .tickSize(-usableArea.width)
             .tickFormat(''));
 
     // Axes
@@ -113,43 +155,42 @@ function createScatterplot() {
 
     svg.append('g')
         .attr('transform', `translate(${usableArea.left},0)`)
-        .call(d3.axisLeft(yScale).tickFormat(d => `${String(d % 24).padStart(2, '0')}:00`)); // Formatted time
+        .call(d3.axisLeft(yScale).tickFormat(d => `${String(d % 24).padStart(2, '0')}:00`));
 
-    const dotsGroup = svg.append('g').attr('class', 'dots'); // Group for dots
-
-    // Sort commits by total lines in descending order for better interaction (Step 4.3)
-    const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+    const dotsGroup = svg.append('g').attr('class', 'dots');
+    const sortedCommits = d3.sort(commitsToUse, (d) => -d.totalLines); // Sort filtered commits
 
     // Dots
     dotsGroup.selectAll('circle')
-        .data(sortedCommits) // Use sortedCommits
+        .data(sortedCommits) // Use sorted and filtered commits
         .join('circle')
         .attr('cx', d => xScale(d.datetime))
         .attr('cy', d => yScale(d.hourFrac))
         .attr('r', d => rScale(d.totalLines))
-        .style('fill-opacity', 0.7) // Add some transparency for overlap
+        .style('fill-opacity', 0.7)
         .on('mouseenter', function (event, d) {
-            d3.select(this).style('fill-opacity', 1); // Full opacity on hover
+            d3.select(this).style('fill-opacity', 1);
             showTooltip(event, d);
         })
         .on('mouseleave', function () {
-            d3.select(this).style('fill-opacity', 0.7); // Restore transparency
+            d3.select(this).style('fill-opacity', 0.7);
             hideTooltip();
         });
 }
 
 function setupBrush() {
-    const svg = d3.select('#chart svg'); // Select the svg element inside #chart
+    const svg = d3.select('#chart svg');
 
+    // ... (rest of setupBrush function is the same) ...
     const brush = d3.brush()
-        .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]]) // Use usableArea extent
-        .on('brush end', brushed); // Listen to 'brush end' event
+        .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]])
+        .on('brush end', brushed);
 
-    svg.append('g') // Append a group for the brush to keep it organized
-       .attr("class", "brush") // Add class for potential styling
+    svg.append('g')
+       .attr("class", "brush")
        .call(brush);
 
-    d3.select('#chart svg').selectAll('.dots, .brush ~ *').raise(); // Raise dots and elements after brush overlay
+    d3.select('#chart svg').selectAll('.dots, .brush ~ *').raise();
 }
 
 
@@ -170,15 +211,20 @@ function isCommitSelected(commit) {
 
 
 function updateSelection() {
-    const circles = d3.selectAll('#chart circle'); // Select circles within the chart
+    const circles = d3.selectAll('#chart circle');
     circles.classed('selected', d => isCommitSelected(d));
 
-    const selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    const selectedCommits = brushSelection ? getDisplayedCommits().filter(isCommitSelected) : []; // Use displayed commits for selection
     const selectedCount = selectedCommits.length;
 
     d3.select('#selection-count').text(`${selectedCount > 0 ? selectedCount : 'No'} commits selected`);
-    updateLanguageBreakdown(selectedCommits); // Pass selected commits to language breakdown
+    updateLanguageBreakdown(selectedCommits);
 }
+
+function getDisplayedCommits() { // Helper function to get currently displayed commits
+    return filterCommits(); // Use the same filtering logic
+}
+
 
 function showTooltip(event, d) {
     const tooltip = d3.select('#commit-tooltip');
@@ -193,8 +239,8 @@ function showTooltip(event, d) {
         <dd>${d.author}</dd>
         <dt>Lines</dt>
         <dd>${d.totalLines}</dd>
-    `).style('left', `${event.clientX + 10}px`)   // Position tooltip near mouse, offset by 10px
-      .style('top', `${event.clientY - 20}px`)    // Position tooltip above mouse, offset by 20px
+    `).style('left', `${event.clientX + 10}px`)
+      .style('top', `${event.clientY - 20}px`)
       .attr('hidden', null);
 }
 
@@ -203,15 +249,15 @@ function hideTooltip() {
     d3.select('#commit-tooltip').attr('hidden', true);
 }
 
-function updateLanguageBreakdown(selectedCommits) { // Accept selectedCommits as argument
-    const commitsToUse = selectedCommits && selectedCommits.length > 0 ? selectedCommits : commits;
+function updateLanguageBreakdown(selectedCommits) {
+    const commitsToUse = selectedCommits && selectedCommits.length > 0 ? selectedCommits : getDisplayedCommits(); // Use displayed commits for breakdown
     const lines = commitsToUse.flatMap(d => d.lines);
 
     const languages = d3.rollup(lines, v => v.length, d => d.type);
     const total = d3.sum([...languages.values()]);
 
     const breakdown = d3.select('#language-breakdown');
-    breakdown.selectAll("*").remove(); // Clear previous breakdown
+    breakdown.selectAll("*").remove();
 
     if (total === 0) {
         breakdown.append("dt").text("No language data");
