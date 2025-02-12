@@ -4,22 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Analysis</title>
-    <link rel="stylesheet" href="/styles.css">
+    <script src="../global.js" type="module"></script>
+    <script src="main.js" type="module"></script>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/meta/">Code Stats</a>
-    </nav>
-    
+
     <main>
         <h1>Codebase Statistics</h1>
-        <div id="stats"></div>
-        
-        <h2>Commits Over Time</h2>
-        <div id="chart"></div>
-        <p id="selection-count">No commits selected</p>
-        <dl id="language-breakdown" class="stats"></dl>
+        <section id="summary-stats">
+            <h2>Summary Statistics</h2>
+            <div id="stats"></div>
+        </section>
+
+        <section id="commits-chart">
+            <h2>Commits by time of day</h2>
+            <div id="chart"></div>
+            <p id="selection-count">No commits selected</p>
+            <dl id="language-breakdown" class="stats"></dl>
+        </section>
     </main>
 
     <dl id="commit-tooltip" class="info tooltip" hidden>
@@ -36,6 +39,5 @@
     </dl>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="main.js"></script>
 </body>
 </html>

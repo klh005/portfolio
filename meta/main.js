@@ -6,6 +6,15 @@ let xScale, yScale, rScale;
 const width = 1000;
 const height = 600;
 const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+const usableArea = {
+    top: margin.top,
+    right: width - margin.right,
+    bottom: height - margin.bottom,
+    left: margin.left,
+    width: width - margin.left - margin.right,
+    height: height - margin.top - margin.bottom,
+};
+
 
 async function loadData() {
     data = await d3.csv('loc.csv', row => ({
@@ -14,8 +23,9 @@ async function loadData() {
         depth: +row.depth,
         length: +row.length,
         datetime: new Date(row.datetime),
+        type: row.type // Ensure 'type' is kept as is (string)
     }));
-    
+
     processCommits();
     displayStats();
     createScatterplot();
@@ -27,19 +37,22 @@ function processCommits() {
         .map(([commit, lines]) => {
             const first = lines[0];
             const datetime = new Date(first.datetime);
-            
+
             const commitObj = {
                 id: commit,
                 url: `https://github.com/klh005/portfolio/commit/${commit}`,
                 author: first.author,
                 datetime,
-                hourFrac: datetime.getHours() + datetime.getMinutes()/60,
-                totalLines: lines.length
+                hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
+                totalLines: lines.length,
+                date: first.date, // Keep date for summary stats if needed
+                time: first.time, // Keep time for summary stats if needed
+                timezone: first.timezone // Keep timezone for summary stats if needed
             };
 
             Object.defineProperty(commitObj, 'lines', {
                 value: lines,
-                enumerable: false
+                enumerable: false // Hide from console.log by default
             });
 
             return commitObj;
@@ -51,11 +64,20 @@ function displayStats() {
         .append('dl')
         .attr('class', 'stats');
 
-    stats.append('dt').text('Total Lines');
+    stats.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>'); // Corrected to Total LOC
     stats.append('dd').text(data.length);
 
     stats.append('dt').text('Total Commits');
     stats.append('dd').text(commits.length);
+
+    // Example of more stats you can add (Step 1.3):
+    const fileCount = d3.group(data, d => d.file).size;
+    stats.append('dt').text('Number of Files');
+    stats.append('dd').text(fileCount);
+
+    const maxFileLineCount = d3.max(d3.rollup(data, v => v.length, d => d.file).values());
+    stats.append('dt').text('Max File Length (LOC)');
+    stats.append('dd').text(maxFileLineCount);
 }
 
 function createScatterplot() {
@@ -65,85 +87,97 @@ function createScatterplot() {
 
     xScale = d3.scaleTime()
         .domain(d3.extent(commits, d => d.datetime))
-        .range([margin.left, width - margin.right]);
+        .range([usableArea.left, usableArea.right]) // Use usableArea
+        .nice(); // Add nice for cleaner axis
 
     yScale = d3.scaleLinear()
         .domain([0, 24])
-        .range([height - margin.bottom, margin.top]);
+        .range([usableArea.bottom, usableArea.top]); // Use usableArea
 
     rScale = d3.scaleSqrt()
         .domain(d3.extent(commits, d => d.totalLines))
         .range([2, 15]);
 
+    // Gridlines (before axes)
+    svg.append('g')
+        .attr('class', 'gridlines')
+        .attr('transform', `translate(${usableArea.left},0)`)
+        .call(d3.axisLeft(yScale)
+            .tickSize(-usableArea.width) // Use usableArea width
+            .tickFormat(''));
+
     // Axes
     svg.append('g')
-        .attr('transform', `translate(0,${height - margin.bottom})`)
+        .attr('transform', `translate(0,${usableArea.bottom})`)
         .call(d3.axisBottom(xScale));
 
     svg.append('g')
-        .attr('transform', `translate(${margin.left},0)`)
-        .call(d3.axisLeft(yScale).tickFormat(d => `${d % 24}:00`));
+        .attr('transform', `translate(${usableArea.left},0)`)
+        .call(d3.axisLeft(yScale).tickFormat(d => `${String(d % 24).padStart(2, '0')}:00`)); // Formatted time
 
-    // Gridlines
-    svg.append('g')
-        .attr('class', 'gridlines')
-        .call(d3.axisLeft(yScale)
-            .tickSize(-width + margin.left + margin.right)
-            .tickFormat(''));
+    const dotsGroup = svg.append('g').attr('class', 'dots'); // Group for dots
+
+    // Sort commits by total lines in descending order for better interaction (Step 4.3)
+    const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
 
     // Dots
-    svg.selectAll('circle')
-        .data(commits)
+    dotsGroup.selectAll('circle')
+        .data(sortedCommits) // Use sortedCommits
         .join('circle')
         .attr('cx', d => xScale(d.datetime))
         .attr('cy', d => yScale(d.hourFrac))
         .attr('r', d => rScale(d.totalLines))
-        .on('mouseenter', function(event, d) {
-            d3.select(this).classed('hover', true);
+        .style('fill-opacity', 0.7) // Add some transparency for overlap
+        .on('mouseenter', function (event, d) {
+            d3.select(this).style('fill-opacity', 1); // Full opacity on hover
             showTooltip(event, d);
         })
-        .on('mouseleave', function() {
-            d3.select(this).classed('hover', false);
+        .on('mouseleave', function () {
+            d3.select(this).style('fill-opacity', 0.7); // Restore transparency
             hideTooltip();
         });
 }
 
 function setupBrush() {
-    const svg = d3.select('svg');
-    
-    const brush = d3.brush()
-        .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]])
-        .on('end', brushed);
+    const svg = d3.select('#chart svg'); // Select the svg element inside #chart
 
-    svg.call(brush);
+    const brush = d3.brush()
+        .extent([[usableArea.left, usableArea.top], [usableArea.right, usableArea.bottom]]) // Use usableArea extent
+        .on('brush end', brushed); // Listen to 'brush end' event
+
+    svg.append('g') // Append a group for the brush to keep it organized
+       .attr("class", "brush") // Add class for potential styling
+       .call(brush);
+
+    d3.select('#chart svg').selectAll('.dots, .brush ~ *').raise(); // Raise dots and elements after brush overlay
 }
+
 
 function brushed(event) {
     brushSelection = event.selection;
     updateSelection();
 }
 
+function isCommitSelected(commit) {
+    if (!brushSelection) return false;
+
+    const [ [x0, y0], [x1, y1] ] = brushSelection;
+    const x = xScale(commit.datetime);
+    const y = yScale(commit.hourFrac);
+
+    return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+}
+
+
 function updateSelection() {
-    const circles = d3.selectAll('circle');
-    
-    if (!brushSelection) {
-        circles.classed('selected', false);
-        d3.select('#selection-count').text('No commits selected');
-        return;
-    }
+    const circles = d3.selectAll('#chart circle'); // Select circles within the chart
+    circles.classed('selected', d => isCommitSelected(d));
 
-    const [[x0, y0], [x1, y1]] = brushSelection;
-    
-    circles.classed('selected', d => 
-        xScale(d.datetime) >= x0 &&
-        xScale(d.datetime) <= x1 &&
-        yScale(d.hourFrac) >= y0 &&
-        yScale(d.hourFrac) <= y1
-    );
+    const selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    const selectedCount = selectedCommits.length;
 
-    const selectedCount = circles.filter('.selected').size();
-    d3.select('#selection-count').text(`${selectedCount} commits selected`);
-    updateLanguageBreakdown();
+    d3.select('#selection-count').text(`${selectedCount > 0 ? selectedCount : 'No'} commits selected`);
+    updateLanguageBreakdown(selectedCommits); // Pass selected commits to language breakdown
 }
 
 function showTooltip(event, d) {
@@ -159,33 +193,39 @@ function showTooltip(event, d) {
         <dd>${d.author}</dd>
         <dt>Lines</dt>
         <dd>${d.totalLines}</dd>
-    `).attr('hidden', null);
+    `).style('left', `${event.clientX + 10}px`)   // Position tooltip near mouse, offset by 10px
+      .style('top', `${event.clientY - 20}px`)    // Position tooltip above mouse, offset by 20px
+      .attr('hidden', null);
 }
+
 
 function hideTooltip() {
     d3.select('#commit-tooltip').attr('hidden', true);
 }
 
-function updateLanguageBreakdown() {
-    const selected = d3.selectAll('.selected').data();
-    const lines = selected.length > 0 
-        ? selected.flatMap(d => d.lines)
-        : data;
+function updateLanguageBreakdown(selectedCommits) { // Accept selectedCommits as argument
+    const commitsToUse = selectedCommits && selectedCommits.length > 0 ? selectedCommits : commits;
+    const lines = commitsToUse.flatMap(d => d.lines);
 
     const languages = d3.rollup(lines, v => v.length, d => d.type);
     const total = d3.sum([...languages.values()]);
 
-    const breakdown = d3.select('#language-breakdown')
-        .selectAll('*')
-        .remove()
-        .selectAll('div')
-        .data([...languages])
-        .join('div');
+    const breakdown = d3.select('#language-breakdown');
+    breakdown.selectAll("*").remove(); // Clear previous breakdown
 
-    breakdown.html(([lang, count]) => `
-        <dt>${lang}</dt>
-        <dd>${count} (${((count / total) * 100).toFixed(1)}%)</dd>
-    `);
+    if (total === 0) {
+        breakdown.append("dt").text("No language data");
+        return;
+    }
+
+    for (const [lang, count] of languages) {
+        const proportion = count / total;
+        const formattedProportion = d3.format(".1~%")(proportion);
+
+        breakdown.append("dt").text(lang);
+        breakdown.append("dd").text(`${count} lines (${formattedProportion})`);
+    }
 }
+
 
 document.addEventListener('DOMContentLoaded', loadData);
