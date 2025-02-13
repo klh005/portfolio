@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Analysis</title>
+    <script type="module" src="../global.js"></script>
+    <link rel="stylesheet" href="../style.css">
+    <script type="module" src="main.js"></script>
+</head>
+<body>
+    <main>
+        <h1>Codebase Statistics</h1>
+
+        <section id="commit-selector">
+            <label for="commit-dropdown">Select Commit:</label>
+            <select id="commit-dropdown">
+                <option value="all">All Commits</option>
+            </select>
+        </section>
+
+        <section id="summary-stats">
+            <h2>Summary Statistics</h2>
+            <div id="stats"></div>
+        </section>
+
+        <section id="commits-chart">
+            <h2>Commits by Time of Day</h2>
+            <div id="chart"></div>
+            <p id="selection-count">No commits selected</p>
+            <dl id="language-breakdown" class="stats"></dl>
+        </section>
+    </main>
+
+    <dl id="commit-tooltip" class="info tooltip" hidden>
+        <dt>Commit</dt>
+        <dd><a href="" id="commit-link" target="_blank"></a></dd>
+        <dt>Date</dt>
+        <dd id="commit-date"></dd>
+        <dt>Time</dt>
+        <dd id="commit-time"></dd>
+        <dt>Author</dt>
+        <dd id="commit-author"></dd>
+        <dt>Lines</dt>
+        <dd id="commit-lines"></dd>
+    </dl>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</body>
+</html>

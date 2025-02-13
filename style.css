@@ -1,0 +1,347 @@
+html {
+  --color-accent: oklch(65% 50% 0);
+  accent-color: var(--color-accent);
+  color-scheme: light dark;
+}
+
+head {
+  font: 100%/1.5 system-ui;
+  max-width: 100ch;
+  margin-inline: auto;
+}
+
+body {
+  font: 100%/1.5 system-ui;
+  max-width: 100ch;
+  margin-inline: auto;
+}
+
+ul {
+  display: contents;
+  list-style-type: none;
+}
+
+a {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  padding: 0.5em;
+}
+
+nav {
+  --border-color: oklch(50% 10% 200 / 40%);
+  display: flex;
+  margin-bottom: 1em;
+  padding-bottom: 0em;
+  border-bottom: 1px solid var(--border-color);;
+}
+
+a:hover {
+  background-color: color-mix(in oklch, var(--color-accent), canvas 85%);;
+  border-bottom: 0.4em solid var(--color-accent);
+  padding-bottom: 0em;
+}
+
+a.current {
+  font-weight: bold;
+  border-bottom: 0.4em solid var(--border-color);
+  padding-bottom: 0em;
+}
+
+form {
+  font-family: inherit;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1em;
+  margin-block: 0.5em;
+}
+
+form label {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+form textarea,
+form input {
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+form button {
+  font-family: inherit;
+  grid-column: 1 / -1;
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em;
+}
+
+.projects article {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  gap: 0.5em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 400%;
+}
+
+h2 {
+  margin: 0;
+}
+
+/* Resume Styles */
+.resume-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.resume-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.contact-info {
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.5rem 0;
+}
+
+.subheading {
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.resume-list {
+  padding-left: 1.5rem;
+}
+
+.resume-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.skill-category h4 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* dark mode */
+.color-scheme {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-size: 80%;
+  font-family: inherit;
+  z-index: 1000;
+  padding: 0.5em;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.color-scheme select {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.25em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+}
+
+body {
+  position: relative;
+  padding-top: 3rem; /* Add padding to prevent content from being hidden under the switcher */
+}
+
+/* Pie chart styling */
+#projects-pie-plot {
+  max-width: 20em;
+  margin: 2em;
+  overflow: visible;
+}
+
+path.selected {
+  --color: oklch(60% 45% 0);
+  fill: var(--color) !important;
+  stroke-width: 3px;
+}
+
+/* Keep hover effect */
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+
+/* Base path styles */
+path {
+  transition: opacity 300ms, stroke 200ms;
+  cursor: pointer;
+  stroke-width: 0; /* Default no border */
+}
+
+/* legend styling */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  padding: 1em;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: 2px;
+  background-color: var(--color);
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  align-items: center;
+  margin: 2em 0;
+}
+
+.project-info {
+  display: grid;
+  gap: 0.5em;
+}
+
+.project-info small {
+  font-family: Baskerville, serif;
+  font-variant-numeric: oldstyle-nums;
+  color: #666;
+}
+
+/* stats */
+.stats dt {
+  font-weight: bold;
+  margin-top: 0.5em;
+}
+
+/* Add to existing styles */
+.info dt { color: #666; }
+.info dd { margin-left: 1em; }
+
+.stats {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.5em 2em;
+}
+
+.stats dt {
+  font-weight: bold;
+  margin-top: 0;
+  flex-basis: auto;
+  width: auto;
+  text-align: left;
+}
+
+.stats dd {
+  margin-left: 0;
+  flex-basis: auto;
+  width: auto;
+  text-align: left;
+}
+
+.stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+
+/* Tooltip styling */
+#commit-tooltip {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  transition: opacity 0.15s ease-out;
+  opacity: 0;
+  display: block !important;
+}
+
+#commit-tooltip.visible {
+  opacity: 1;
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+dl.info dt {
+  font-weight: 500;
+  color: #666;
+}
+
+/* Dot interactions */
+circle {
+  transition: transform 0.2s ease-out, opacity 0.2s ease;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+  opacity: 1 !important;
+}
+
+circle.selected {
+  fill: #ff6b6b !important;
+  stroke: #c53030;
+  stroke-width: 2px;
+}
+
+/* Brush styling */
+.selection {
+  fill: steelblue;
+  fill-opacity: 0.1;
+  stroke: #2c5282;
+  stroke-dasharray: 3;
+}

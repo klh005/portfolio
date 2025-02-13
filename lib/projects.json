@@ -1,0 +1,98 @@
+[
+    {
+        "title": "RVC 2.0 Voice Model Training",
+        "year": 2022,
+        "image": "../images/voice-model.jpg",
+        "description": "Developed AI voice models with 90% fidelity using PyTorch and Mangio Crepe pipeline"
+    },
+    {
+        "title": "MMO Private Server Infrastructure",
+        "year": 2023,
+        "image": "../images/server-architecture.jpg",
+        "description": "High-performance gaming server infrastructure with Ruby and Redis caching"
+    },
+    {
+        "title": "Virtual PT AI System",
+        "year": 2024,
+        "image": "../images/ai-health.jpg",
+        "description": "NSF-funded motion tracking system with 40% speed improvement"
+    },
+    {
+        "title": "Construction Project Management",
+        "year": 2021,
+        "image": "../images/construction-mgmt.jpg",
+        "description": "Automated database system for architectural project coordination"
+    },
+    {
+        "title": "Wow!",
+        "year": 2024,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit..."
+    },
+    {
+        "title": "Voluptatem ut modi aliquid?",
+        "year": 2023,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Hic maiores reiciendis corporis quia nemo quod..."
+    },
+    {
+        "title": "Dignissimos maiores enim autem?",
+        "year": 2023,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Fuga tempora illum beatae maxime eaque tenetur..."
+    },
+    {
+        "title": "Quod earum incidunt in.",
+        "year": 2022,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Possimus ratione excepturi, minus numquam esse..."
+    },
+    {
+        "title": "Quibusdam consequuntur numquam necessitatibus?",
+        "year": 2022,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Laboriosam, possimus. Consequuntur vel est..."
+    },
+    {
+        "title": "Dicta debitis facere earum!",
+        "year": 2022,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Saepe fugiat commodi, maxime, repudiandae..."
+    },
+    {
+        "title": "Illum harum doloribus laboriosam.",
+        "year": 2021,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Voluptates unde quasi corporis..."
+    },
+    {
+        "title": "Odio et dolor vero.",
+        "year": 2021,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Quisquam quos tempora ad ea error..."
+    },
+    {
+        "title": "Animi perspiciatis maxime dicta!",
+        "year": 2024,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Necessitatibus quidem perspiciatis velit..."
+    },
+    {
+        "title": "Perspiciatis a nesciunt alias!",
+        "year": 2024,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Error deleniti a quia..."
+    },
+    {
+        "title": "Minima cumque voluptatibus ipsam.",
+        "year": 2023,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Laudantium quod repudiandae dignissimos..."
+    },
+    {
+        "title": "Cupiditate iste itaque deserunt.",
+        "year": 2024,
+        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
+        "description": "Impedit fugit commodi mollitia ducimus..."
+    }
+]
