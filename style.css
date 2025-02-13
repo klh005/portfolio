@@ -101,10 +101,6 @@ h2 {
   margin: 0;
 }
 
-/* .contactctrl {
-  grid-column: 2;
-} */
-
 /* Resume Styles */
 .resume-section {
   max-width: 800px;
@@ -155,12 +151,12 @@ h2 {
 
 /* dark mode */
 .color-scheme {
-  position: fixed; 
+  position: fixed;
   top: 1rem;
   right: 1rem;
   font-size: 80%;
   font-family: inherit;
-  z-index: 1000; 
+  z-index: 1000;
   padding: 0.5em;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -192,7 +188,6 @@ path.selected {
   --color: oklch(60% 45% 0);
   fill: var(--color) !important;
   stroke-width: 3px;
-
 }
 
 /* Keep hover effect */
@@ -206,7 +201,6 @@ path {
   cursor: pointer;
   stroke-width: 0; /* Default no border */
 }
-
 
 /* legend styling */
 .legend {
@@ -259,37 +253,95 @@ path {
   margin-top: 0.5em;
 }
 
-.tooltip {
-  position: fixed;
-  top: 1em;
-  left: 1em;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1em;
-  border-radius: 0.5em;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  backdrop-filter: blur(5px);
-}
-
-.gridlines line {
-  stroke: #ddd;
-  stroke-opacity: 0.4;
-}
-
-circle {
-  transition: all 0.2s;
-  fill: steelblue;
-  opacity: 0.7;
-}
-
-circle.selected {
-  fill: #ff6b6b;
-}
-
-circle:hover {
-  opacity: 1;
-  transform: scale(1.5);
-}
-
 /* Add to existing styles */
 .info dt { color: #666; }
 .info dd { margin-left: 1em; }
+
+.stats {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.5em 2em;
+}
+
+.stats dt {
+  font-weight: bold;
+  margin-top: 0;
+  flex-basis: auto;
+  width: auto;
+  text-align: left;
+}
+
+.stats dd {
+  margin-left: 0;
+  flex-basis: auto;
+  width: auto;
+  text-align: left;
+}
+
+.stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+
+/* Tooltip styling */
+#commit-tooltip {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  transition: opacity 0.15s ease-out;
+  opacity: 0;
+  display: block !important;
+}
+
+#commit-tooltip.visible {
+  opacity: 1;
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+dl.info dt {
+  font-weight: 500;
+  color: #666;
+}
+
+/* Dot interactions */
+circle {
+  transition: transform 0.2s ease-out, opacity 0.2s ease;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+  opacity: 1 !important;
+}
+
+circle.selected {
+  fill: #ff6b6b !important;
+  stroke: #c53030;
+  stroke-width: 2px;
+}
+
+/* Brush styling */
+.selection {
+  fill: steelblue;
+  fill-opacity: 0.1;
+  stroke: #2c5282;
+  stroke-dasharray: 3;
+}
