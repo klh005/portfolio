@@ -290,8 +290,7 @@ path {
 /* Tooltip styling */
 #commit-tooltip {
   position: fixed;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.95);
   padding: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
